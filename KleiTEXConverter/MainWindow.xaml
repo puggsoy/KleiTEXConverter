@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="KleiTEXConverter" Height="353" Width="400">
     <Grid>
-        <TextBox x:Name="InPathBox" Text="InPath" TextWrapping="NoWrap" Margin="10,10,160,0" VerticalAlignment="Top" IsReadOnly="True" Height="20"/>
+        <TextBox x:Name="InPathBox" TextWrapping="NoWrap" Margin="10,10,160,0" VerticalAlignment="Top" IsReadOnly="True" Height="20"/>
         <Button Content="Select Input Folder" Margin="0,10,10,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Width="140" Click="OnSelectInputClick"/>
 
-        <TextBox x:Name="OutPathBox" Text="OutPath" TextWrapping="NoWrap" Margin="10,40,160,0" VerticalAlignment="Top" IsReadOnly="True" Height="20"/>
+        <TextBox x:Name="OutPathBox" TextWrapping="NoWrap" Margin="10,40,160,0" VerticalAlignment="Top" IsReadOnly="True" Height="20"/>
         <Button Content="Select Output Folder" Margin="0,40,10,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Right" Width="140" Click="OnSelectOutputClick"/>
 
         <Button x:Name="ConvertButton" Content="Convert" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="140" Height="40" IsEnabled="False" Click="OnConvertClick"/>

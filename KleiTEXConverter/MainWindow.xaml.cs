@@ -16,8 +16,8 @@ Copyright (C) 2021  puggsoy
 */
 
 
-using KleiLib;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -103,7 +103,7 @@ namespace KleiTEXConverter
 
 		private async void ConvertTEXFiles()
 		{
-			string[] filePaths = Directory.GetFiles(m_inputPath);
+			string[] filePaths = Directory.GetFiles(m_inputPath, "*.tex");
 
 			TEXConverter ??= new TEXConverter();
 
@@ -114,10 +114,18 @@ namespace KleiTEXConverter
 				LogBox.Text += string.Format("Converting {0}...\n", file);
 				LogBox.ScrollToEnd();
 
-				string outPath = await Task.Run(() => ConvertFile(file));
+				try
+				{
+					string outPath = await Task.Run(() => ConvertFile(file));
 
-				LogBox.Text += string.Format("Saved to {0}!\n", outPath);
-				LogBox.ScrollToEnd();
+					LogBox.Text += string.Format("Saved to {0}!\n", outPath);
+					LogBox.ScrollToEnd();
+				}
+				catch (Exception e)
+				{
+					LogBox.Text += string.Format("Failed to convert! Error: {0}\n", e.ToString());
+					LogBox.ScrollToEnd();
+				}
 			}
 
 			LogBox.Text += "\nAll done!";
