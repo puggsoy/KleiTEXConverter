@@ -40,12 +40,6 @@ namespace KleiTEXConverter
 		{
 			InitializeComponent();
 
-			// TODO: Remove this when releasing!
-			m_inputPath = "E:\\Development\\C#\\KleiTEXConverter\\warly";
-			InPathBox.Text = m_inputPath;
-			m_outputPath = "E:\\Development\\C#\\KleiTEXConverter\\warlyout";
-			OutPathBox.Text = m_outputPath;
-
 			CheckCanConvert();
 		}
 
