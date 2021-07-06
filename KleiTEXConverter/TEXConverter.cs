@@ -35,27 +35,36 @@ namespace KleiTEXConverter
 
 			Mipmap mipmap = texFile.GetMainMipmap();
 
-			byte[] argbData = null;
+			byte[] rgbaData = null;
 
 			switch((TEXFile.PixelFormat)texFile.File.Header.PixelFormat)
 			{
 				case TEXFile.PixelFormat.DXT1:
-					argbData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt1);
+					rgbaData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt1);
 					break;
 				case TEXFile.PixelFormat.DXT3:
-					argbData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt3);
+					rgbaData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt3);
 					break;
 				case TEXFile.PixelFormat.DXT5:
-					argbData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt5);
+					rgbaData = Squish.DecompressImage(mipmap.Data, mipmap.Width, mipmap.Height, SquishFlags.Dxt5);
 					break;
 				case TEXFile.PixelFormat.ARGB:
-					argbData = mipmap.Data;
+					rgbaData = mipmap.Data;
 					break;
 				default:
 					throw new Exception(string.Format("Unknown pixel format: 0x{0}", texFile.File.Header.PixelFormat.ToString("X")));
 			}
 
-			BinaryReader imgReader = new BinaryReader(new MemoryStream(argbData));
+			byte[] bgraData = new byte[rgbaData.Length];
+
+			// bgraData will be read as little-endian ARGB
+			for (int i = 0; i < bgraData.Length; i += 4)
+			{
+				bgraData[i] = rgbaData[i + 2];
+				bgraData[i + 1] = rgbaData[i + 1];
+				bgraData[i + 2] = rgbaData[i];
+				bgraData[i + 3] = rgbaData[i + 3];
+			}
 
 			Bitmap bmp = new Bitmap(mipmap.Width, mipmap.Height);
 
@@ -63,7 +72,7 @@ namespace KleiTEXConverter
 			BitmapData bmpData = bmp.LockBits(bmpBounds, ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 			IntPtr ptr = bmpData.Scan0;
-			Marshal.Copy(argbData, 0, ptr, argbData.Length);
+			Marshal.Copy(bgraData, 0, ptr, bgraData.Length);
 			bmp.UnlockBits(bmpData);
 
 			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
